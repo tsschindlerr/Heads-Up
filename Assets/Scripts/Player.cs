@@ -14,10 +14,12 @@ public class Player : MonoBehaviour
 
     //animation
     private Animator animator;
+    private SpriteRenderer spriteRenderer;
     void Start()
     {
         playerRb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -40,6 +42,7 @@ public class Player : MonoBehaviour
         }
 
         SetAnimation(moveInput);
+        FlipPlayerSprite();
     }
 
     private void SetAnimation(float moveInput)
@@ -61,6 +64,20 @@ public class Player : MonoBehaviour
             {
                 animator.Play("player_jump");
             }           
+        }
+    }
+    private void FlipPlayerSprite()
+    {
+        if (playerRb.linearVelocityX != 0)
+        {
+            if (playerRb.linearVelocityX > 0)
+            {
+                spriteRenderer.flipX = false;
+            }
+            else
+            {
+                spriteRenderer.flipX = true;
+            }
         }
     }
 }
