@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     public Transform groundCheck;
     public float groundCheckRadius = 0.2f;
     public LayerMask groundLayer;
+    public int extraJumpsAmount;
+    private int extraJumps;
 
     //animation
     private Animator animator;
@@ -20,6 +22,7 @@ public class Player : MonoBehaviour
         playerRb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        extraJumps = extraJumpsAmount;
     }
 
     void Update()
@@ -27,7 +30,7 @@ public class Player : MonoBehaviour
         MovePlayer();
     }
     private void FixedUpdate()
-    {     
+    {
         //overlap circle checking if player touches the ground layer
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
     }
@@ -36,9 +39,22 @@ public class Player : MonoBehaviour
         float moveInput = Input.GetAxis("Horizontal");
         playerRb.linearVelocity = new Vector2(moveInput * playerMoveSpeed, playerRb.linearVelocity.y);
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (isGrounded)
         {
-            playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, playerJumpForce);
+            extraJumps = extraJumpsAmount;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (isGrounded)
+            {
+                playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, playerJumpForce);
+            }
+            else if (extraJumps > 0)
+            {
+                playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, playerJumpForce);
+                extraJumps--;
+            }
         }
 
         SetAnimation(moveInput);
@@ -60,10 +76,10 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if(playerRb.linearVelocityY >0)
+            if (playerRb.linearVelocityY > 0)
             {
                 animator.Play("player_jump");
-            }           
+            }
         }
     }
     private void FlipPlayerSprite()
