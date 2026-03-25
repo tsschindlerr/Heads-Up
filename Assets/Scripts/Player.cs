@@ -17,6 +17,9 @@ public class Player : MonoBehaviour
     //animation
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+
+    //collectibles
+    public int coins;
     void Start()
     {
         playerRb = GetComponent<Rigidbody2D>();
